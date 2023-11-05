@@ -1,4 +1,6 @@
-﻿namespace HomeTemp
+﻿using static HomeTemp.RoomBase;
+
+namespace HomeTemp
 {
     public interface IRoom
     {
@@ -10,5 +12,10 @@
         void AddTemp(long temp);
 
         Statistics GetStatistics();
+
+        event TempAddedDelegate TempAdded;
+
+        // public void ShowStatistics(List<RoomInMemory> rooms);
+        public void ShowStatistics(List<RoomInFile> rooms);
     }
 }

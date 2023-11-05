@@ -1,6 +1,6 @@
-﻿using HomeTemp;
+﻿namespace HomeTemp;
 
-public class Program
+internal class Program
 {
     private static void Main(string[] args)
     {
@@ -10,95 +10,77 @@ public class Program
         Console.WriteLine("Acceptable values: -30 to +50 degrees Celsius.");
         Console.WriteLine("Press 'Q' to finish adding temperatures and view statistics.");
 
-        var livingRoom = new RoomInMemory("Living Room");
-        var bedroom = new RoomInMemory("Bedroom");
+        var livingRoom = new RoomInFile("Living Room");
+        var bedroom = new RoomInFile("Bedroom");
+        var bathroom = new RoomInFile("Bathroom");
+
+        List<RoomInFile> rooms = new List<RoomInFile>() { livingRoom, bedroom, bathroom };
+
+        var roomInFile = new RoomInFile("");
 
         while (true)
         {
-            while (true)
+            EnterTemperatures(rooms);
+
+            if (!ContinueEnteringTemperatures())
             {
-                Console.Write($"\nEnter the next Living Room temperature: ");
+                break;
+            }
+        }
+        roomInFile.ShowStatistics(rooms);
+    }
+
+    private static void EnterTemperatures(List<RoomInFile> rooms)
+    {
+        foreach (RoomInFile room in rooms)
+        {
+            bool continueEntering = true;
+
+            while (continueEntering)
+            {
+                Console.Write($"\nEnter the next {room.Name} temperature: ");
                 var input = Console.ReadLine().ToUpper();
 
                 if (input == "Q")
-                    break;
+                {
+                    Console.WriteLine("Ending process.");
+                    return;
+                }
 
                 try
                 {
-                    livingRoom.AddTemp(input);
-                    break;
+                    room.AddTemp(input);
+                    continueEntering = false;
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Exception catched: {ex.Message}");
+                    Console.WriteLine($"Exception caught: {ex.Message}");
                 }
             }
+        }
+    }
 
-            while (true)
-            {
-                Console.Write($"\nEnter the next Bedroom temperature: ");
-                var input = Console.ReadLine().ToUpper();
-
-                if (input == "Q")
-                    break;
-
-                try
-                {
-                    bedroom.AddTemp(input);
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Exception catched: {ex.Message}");
-                }
-            }
-
+    private static bool ContinueEnteringTemperatures()
+    {
+        while (true)
+        {
             Console.Write("\nDo you want to continue entering temperatures? Y/N : ");
             var userInput = Console.ReadLine().ToUpper();
 
-            switch (userInput)
+            if (userInput == "Y")
             {
-                case "Y":
-                    Console.WriteLine("Continue entering temperatures.");
-                    continue;
-                case "N":
-                    Console.WriteLine("Ending process.");
-                    break;
-                default:
-                    Console.WriteLine("Wrong letter! Ending process!");
-                    break;
+                Console.WriteLine("Continue entering temperatures.");
+                return true;
             }
-            break;
+            else if (userInput == "N")
+            {
+                Console.WriteLine("Ending process.");
+                return false;
+            }
+            else
+            {
+                Console.WriteLine("Wrong letter! Please enter 'Y' or 'N'.");
+            }
         }
-
-        var livingRoomStatistics = livingRoom.GetStatistics();
-
-        Console.WriteLine("\nSTATISTICS:");
-
-        Console.WriteLine("\nLiving Room:");
-        Console.WriteLine("------------");
-        Console.WriteLine($"Total amount of correct values: {livingRoomStatistics.Count}");
-        Console.WriteLine($"Average temperature: {livingRoomStatistics.Average:N1}");
-        Console.WriteLine($"Min temperature: {livingRoomStatistics.Min:N1}");
-        Console.WriteLine($"Max temperature: {livingRoomStatistics.Max:N1}");
-
-        var bedroomStatistics = bedroom.GetStatistics();
-
-        Console.WriteLine("\nBedroom:");
-        Console.WriteLine("--------");
-        Console.WriteLine($"Total amount of correct values: {bedroomStatistics.Count}");
-        Console.WriteLine($"Average temperature: {bedroomStatistics.Average:N1}");
-        Console.WriteLine($"Min temperature: {bedroomStatistics.Min:N1}");
-        Console.WriteLine($"Max temperature: {bedroomStatistics.Max:N1}");
-
-        var totalSum = livingRoomStatistics.Sum + bedroomStatistics.Sum;
-        var totalCount = livingRoomStatistics.Count + bedroomStatistics.Count;
-        var totalAverage = totalSum / totalCount;
-
-        Console.WriteLine("\nTotal: ");
-        Console.WriteLine("-------");
-        Console.WriteLine($"Total amount of correct values: {totalCount}");
-        Console.WriteLine($"Average temperature: {totalAverage:N1}");
     }
 }
-
