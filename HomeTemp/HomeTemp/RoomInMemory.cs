@@ -24,26 +24,6 @@
                 throw new Exception("What da Hell?! Please enter the correct value from -30 to +50°C!");
         }
 
-        public override void AddTemp(string temp)
-        {
-            if (float.TryParse(temp, out float result))
-                AddTemp(result);
-            else
-                throw new Exception("Please enter the correct value!");
-        }
-
-        public override void AddTemp(double temp)
-        {
-            float tempAsDouble = (float)temp;
-            AddTemp(tempAsDouble);
-        }
-
-        public override void AddTemp(long temp)
-        {
-            float tempAsLong = (float)temp;
-            AddTemp(tempAsLong);
-        }
-
         public override Statistics GetStatistics()
         {
             var statistics = new Statistics();
@@ -53,6 +33,23 @@
                 statistics.AddTemp(temp);
             }
             return statistics;
+        }
+
+        public void ShowStatistics(List<RoomInMemory> rooms)
+        {
+            Console.WriteLine("\nSTATISTICS:");
+
+            foreach (RoomInMemory room in rooms)
+            {
+                var roomStatistics = room.GetStatistics();
+
+                Console.WriteLine($"\n{room.Name}:");
+                Console.WriteLine(new string('-', room.Name.Length));
+                Console.WriteLine($"Total amount of correct values: {roomStatistics.Count}");
+                Console.WriteLine($"Average temperature: {roomStatistics.Average:N1}°C");
+                Console.WriteLine($"Min temperature: {roomStatistics.Min:N1}°C");
+                Console.WriteLine($"Max temperature: {roomStatistics.Max:N1}°C");
+            }
         }
     }
 }

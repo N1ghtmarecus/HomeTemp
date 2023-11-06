@@ -29,7 +29,6 @@ internal class Program
         }
         roomInFile.ShowStatistics(rooms);
     }
-
     private static void EnterTemperatures(List<RoomInFile> rooms)
     {
         foreach (RoomInFile room in rooms)

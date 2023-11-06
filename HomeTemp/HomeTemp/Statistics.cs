@@ -33,6 +33,5 @@
             this.Count++;
             this.Sum += temp;
         }
-
     }
 }

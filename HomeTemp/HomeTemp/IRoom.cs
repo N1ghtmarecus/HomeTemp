@@ -14,8 +14,5 @@ namespace HomeTemp
         Statistics GetStatistics();
 
         event TempAddedDelegate TempAdded;
-
-        // public void ShowStatistics(List<RoomInMemory> rooms);
-        public void ShowStatistics(List<RoomInFile> rooms);
     }
 }
