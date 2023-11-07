@@ -18,67 +18,98 @@ internal class Program
 
         var roomInFile = new RoomInFile("");
 
+        bool showMenu = true;
+
         while (true)
         {
-            EnterTemperatures(rooms);
-
-            if (!ContinueEnteringTemperatures())
+            if (showMenu)
             {
-                break;
+                Console.WriteLine("\nMenu:");
+                Console.WriteLine("1. Enter rooms temperatures");
+                Console.WriteLine("2. Show statistics");
+                Console.WriteLine("3. Quit the program");
             }
-        }
-        roomInFile.ShowStatistics(rooms);
-    }
-    private static void EnterTemperatures(List<RoomInFile> rooms)
-    {
-        foreach (RoomInFile room in rooms)
-        {
-            bool continueEntering = true;
 
-            while (continueEntering)
+            string choice = Console.ReadLine();
+
+            switch (choice)
             {
-                Console.Write($"\nEnter the next {room.Name} temperature: ");
-                var input = Console.ReadLine().ToUpper();
+                case "1":
+                    while (true)
+                    {
+                        EnterTemperatures(rooms);
 
-                if (input == "Q")
-                {
-                    Console.WriteLine("Ending process.");
+                        if (!ContinueEnteringTemperatures())
+                        {
+                            break;
+                        }
+                    }
+                    roomInFile.ShowStatistics(rooms);
+                    showMenu = true;
+                    break;
+                case "2":
+                    roomInFile.ShowStatistics(rooms);
+                    showMenu = true;
+                    break;
+                case "3":
+                    Console.WriteLine("Quitting the program.");
                     return;
-                }
+                default:
+                    Console.WriteLine("Invalid choice. Please select a valid option.");
+                    showMenu = false;
+                    break;
+            }
+        }
 
-                try
+        static void EnterTemperatures(List<RoomInFile> rooms)
+        {
+            foreach (RoomInFile room in rooms)
+            {
+                bool continueEntering = true;
+
+                while (continueEntering)
                 {
-                    room.AddTemp(input);
-                    continueEntering = false;
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Exception caught: {ex.Message}");
+                    Console.Write($"\nEnter the next {room.Name} temperature: ");
+                    var input = Console.ReadLine().ToUpper();
+
+                    if (input == "Q")
+                    {
+                        Console.WriteLine("Ending process.");
+                        return;
+                    }
+
+                    try
+                    {
+                        room.AddTemp(input);
+                        continueEntering = false;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception caught: {ex.Message}");
+                    }
                 }
             }
         }
-    }
 
-    private static bool ContinueEnteringTemperatures()
-    {
-        while (true)
+        static bool ContinueEnteringTemperatures()
         {
-            Console.Write("\nDo you want to continue entering temperatures? Y/N : ");
-            var userInput = Console.ReadLine().ToUpper();
+            while (true)
+            {
+                Console.Write("\nDo you want to continue entering temperatures? Y/N : ");
+                var userInput = Console.ReadLine().ToUpper();
 
-            if (userInput == "Y")
-            {
-                Console.WriteLine("Continue entering temperatures.");
-                return true;
-            }
-            else if (userInput == "N")
-            {
-                Console.WriteLine("Ending process.");
-                return false;
-            }
-            else
-            {
-                Console.WriteLine("Wrong letter! Please enter 'Y' or 'N'.");
+                switch (userInput)
+                {
+                    case "Y":
+                        Console.WriteLine("Continue entering temperatures.");
+                        return true;
+                    case "N":
+                        Console.WriteLine("Ending process.");
+                        return false;
+                    default:
+                        Console.WriteLine("Wrong letter! Please enter 'Y' or 'N'.");
+                        break;
+                }
             }
         }
     }

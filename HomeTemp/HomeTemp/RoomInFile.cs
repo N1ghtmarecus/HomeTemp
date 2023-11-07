@@ -21,7 +21,7 @@
                 using (var writer = File.AppendText(roomFileName))
                     writer.WriteLine(temp);
 
-                if (TempAdded != null) 
+                if (TempAdded != null)
                     TempAdded(this, new EventArgs());
             }
             else if (temp < -30.0f)
@@ -40,19 +40,31 @@
         private List<float> ReadTempsFromFile()
         {
             var temps = new List<float>();
-            if (File.Exists($"{roomFileName}"))
+            if (File.Exists(roomFileName))
             {
-                using (var reader = File.OpenText($"{roomFileName}"))
+                try
                 {
-                    var line = reader.ReadLine();
-                    while (line != null)
+                    using (var reader = File.OpenText(roomFileName))
                     {
-                        var number = float.Parse(line);
-                        temps.Add(number);
-                        line = reader.ReadLine();
+                        var line = reader.ReadLine();
+                        while (line != null)
+                        {
+                            var number = float.Parse(line);
+                            temps.Add(number);
+                            line = reader.ReadLine();
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error reading temperature data: {ex.Message}");
+                }
             }
+            else
+            {
+                Console.WriteLine("No temperature data found.");
+            }
+
             return temps;
         }
 
@@ -72,17 +84,55 @@
         {
             Console.WriteLine("\nSTATISTICS:");
 
+            RoomInFile warmestRoom = null;
+            RoomInFile coldestRoom = null;
+            bool anyDataFound = false;
+
             foreach (RoomInFile room in rooms)
             {
                 var roomStatistics = room.GetStatistics();
 
-                Console.WriteLine($"\n{room.Name}:");
-                Console.WriteLine(new string('-', room.Name.Length));
-                Console.WriteLine($"Total amount of correct values: {roomStatistics.Count}");
-                Console.WriteLine($"Average temperature: {roomStatistics.Average:N1}°C");
-                Console.WriteLine($"Min temperature: {roomStatistics.Min:N1}°C");
-                Console.WriteLine($"Max temperature: {roomStatistics.Max:N1}°C");
+                if (roomStatistics.Count != 0)
+                {
+                    Console.WriteLine($"\n{room.Name}:");
+                    Console.WriteLine(new string('-', room.Name.Length));
+                    Console.WriteLine($"Total amount of correct values: {roomStatistics.Count}");
+                    Console.WriteLine($"Average temperature: {roomStatistics.Average:N1}°C");
+                    Console.WriteLine($"Min temperature: {roomStatistics.Min:N1}°C");
+                    Console.WriteLine($"Max temperature: {roomStatistics.Max:N1}°C");
+
+                    if (warmestRoom == null || roomStatistics.Average > warmestRoom.GetStatistics().Average)
+                    {
+                        warmestRoom = room;
+                    }
+
+                    if (coldestRoom == null || roomStatistics.Average < coldestRoom.GetStatistics().Average)
+                    {
+                        coldestRoom = room;
+                    }
+
+                    anyDataFound = true;
+                }
             }
+
+            if (!anyDataFound)
+            {
+                Console.WriteLine("No temperature data found. Please enter temperatures first.");
+            }
+            else
+            {
+                if (warmestRoom != null)
+                {
+                    Console.WriteLine($"\nRoom with highest average temperature - {warmestRoom.Name}: {warmestRoom.GetStatistics().Average:N1}°C");
+                }
+                if (coldestRoom != null)
+                {
+                    Console.WriteLine($"Room with lowest average temperature - {coldestRoom.Name}: {coldestRoom.GetStatistics().Average:N1}°C");
+                }
+            }
+
+            Console.WriteLine("\nPress Enter to return to the menu.");
+            Console.ReadLine();
         }
     }
 }
