@@ -34,7 +34,7 @@ internal class Program
             switch (choice)
             {
                 case "1":
-                    Console.WriteLine("\nIf you want to finish adding temperatures press 'Q' and view statistics.");
+                    Console.WriteLine("\nIf you want to finish adding temperatures press 'Q' and view rooms statistics.");
                     while (true)
                     {
                         EnterTemperatures(rooms);

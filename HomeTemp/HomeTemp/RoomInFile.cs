@@ -64,7 +64,7 @@
             }
             else
             {
-                Console.WriteLine("No temperature data found.");
+                Console.WriteLine($"No temperature data found for {Name}.");
             }
 
             return temps;
@@ -119,7 +119,7 @@
 
             if (!anyDataFound)
             {
-                Console.WriteLine("No temperature data found. Please enter temperatures first.");
+                Console.WriteLine("No temperature data found for any rooms. Please enter temperatures first.");
             }
             else
             {
