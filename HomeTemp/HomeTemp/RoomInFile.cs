@@ -40,6 +40,8 @@
         private List<float> ReadTempsFromFile()
         {
             var temps = new List<float>();
+            roomFileName = $"{Name}_Temperatures.txt";
+
             if (File.Exists(roomFileName))
             {
                 try

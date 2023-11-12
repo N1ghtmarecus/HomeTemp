@@ -4,11 +4,10 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("----------------------------");
-        Console.WriteLine("Welcome to HomeTemp Project!");
-        Console.WriteLine("----------------------------");
-        Console.WriteLine("Acceptable values: -30 to +50 degrees Celsius.");
-        Console.WriteLine("Press 'Q' to finish adding temperatures and view statistics.");
+        Console.WriteLine("--------------------------------");
+        Console.WriteLine("  Welcome to HomeTemp Project!  ");
+        Console.WriteLine("--------------------------------");
+        Console.WriteLine("Acceptable values: -30 to +50°C.");
 
         var livingRoom = new RoomInFile("Living Room");
         var bedroom = new RoomInFile("Bedroom");
@@ -35,6 +34,7 @@ internal class Program
             switch (choice)
             {
                 case "1":
+                    Console.WriteLine("\nIf you want to finish adding temperatures press 'Q' and view statistics.");
                     while (true)
                     {
                         EnterTemperatures(rooms);
